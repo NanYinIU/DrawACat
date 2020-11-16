@@ -1,4 +1,4 @@
-package cat.Basic;
+package cat.basic;
 
 /**
  * 查看String、StringBuffer、StringBuilder的区别

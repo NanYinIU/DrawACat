@@ -2,11 +2,10 @@ package cat.arithmetic.leetcode.tree;
 
 /**
  * 100. 相同的树
- *
+ * <p>
  * 给定两个二叉树，编写一个函数来检验它们是否相同。
- *
+ * <p>
  * 如果两个树在结构上相同，并且节点具有相同的值，则认为它们是相同的
- *
  *
  * @author gaoguoxing
  * @version 1.0
@@ -15,12 +14,12 @@ package cat.arithmetic.leetcode.tree;
 public class IsSameTree {
 
     public boolean isSameTree(TreeNode p, TreeNode q) {
-        if(p == null && q == null){
+        if (p == null && q == null) {
             return true;
-        }else if( (p == null && q != null) || (p !=null && q == null) ){
+        } else if ((p == null && q != null) || (p != null && q == null)) {
             return false;
         }
-        return p.val==q.val && isSameTree(p.left,q.left) && isSameTree(p.right,q.right);
+        return p.val == q.val && isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
     }
 
 }

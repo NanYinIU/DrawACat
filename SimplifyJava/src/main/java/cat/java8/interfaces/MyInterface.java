@@ -2,6 +2,8 @@ package cat.java8.interfaces;
 
 /**
  *
+ * day1:
+ *
  * What: Java8中可以使用default关键字在接口中声明一个实现方法,并能够在客户端中直接像实现方法一样使用。
  *
  * why：原来的接口中没有default方法，在实现接口的时候，需要重写接口中的所有方法。

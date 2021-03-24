@@ -1,6 +1,12 @@
 package cat.jvm;
 
+import org.omg.CORBA.Current;
+import org.openjdk.jol.datamodel.CurrentDataModel;
 import org.openjdk.jol.info.ClassLayout;
+import org.openjdk.jol.layouters.CurrentLayouter;
+import org.openjdk.jol.layouters.HotSpotLayouter;
+import org.openjdk.jol.layouters.Layouter;
+import org.openjdk.jol.vm.VM;
 
 /**
  * 使用jol（Java Object Layout）工具，分析内存结构占比
@@ -26,15 +32,22 @@ public class ObjectStructure {
         // o = 12l;
         // 运行下面的代码进行证明
         System.out.println(ClassLayout.parseInstance(o).toPrintable());
+//        int hashCode = System.identityHashCode(o);
+//        System.out.println(hashCode);
+        System.gc();
+        System.out.println(ClassLayout.parseInstance(o).toPrintable());
+//        synchronized (o){
+//            System.out.println(ClassLayout.parseInstance(o).toPrintable());
+//        }
 
-        int a = 0;
-        // int 占用4个字节
-        System.out.println(ClassLayout.parseInstance(a).toPrintable());
-
-        // 查看数组占用内存  16 + 48
-        int[] arr = new int[12];
-        System.out.println(arr[0]);
-        System.out.println(ClassLayout.parseInstance(arr).toPrintable());
+//        int a = 0;
+//        // int 占用4个字节
+//        System.out.println(ClassLayout.parseInstance(a).toPrintable());
+//
+//        // 查看数组占用内存  16 + 48
+//        int[] arr = new int[12];
+//        System.out.println(arr[0]);
+//        System.out.println(ClassLayout.parseInstance(arr).toPrintable());
 
 //        double b = 5L;
 //        System.out.println(ClassLayout.parseInstance(b).toPrintable());

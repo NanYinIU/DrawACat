@@ -1,14 +1,22 @@
 package cat.test;
 
 import org.junit.Test;
+import sun.jvm.hotspot.runtime.VM;
+import sun.jvm.hotspot.types.basic.BasicTypeDataBase;
 import sun.misc.GC;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.lang.ref.PhantomReference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,6 +27,7 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -137,21 +146,9 @@ public class SimpleTest1 {
 
     @Test
     public void test1_5(){
-        Double a  = 1.609862399059E12;
-        System.out.println(a);
-        Double b = null;
-        if(b == null || b.equals(a)){
-            System.out.println("ddd");
-        }
-
-        Double c = 1609123830000.10234;
-        Double d = 1609123830000.10235;
-
-        System.out.println(c > d);
-        System.out.println(d == c);
-        System.out.println(d);
-        System.out.println(c);
-        System.out.println(c.equals(d));
+       List<Integer> list = Arrays.asList(1,2,3,4,5);
+        List<Integer> collect = list.stream().filter(x -> x == 2).collect(Collectors.toList());
+        collect.forEach(System.out::println);
     }
 
     @Test
@@ -268,32 +265,6 @@ public class SimpleTest1 {
 
     }
 
-    //  2021-01-08 12:06:02 1610078762000  > 16101266 69749
-    //  2021-01-08 15:26:02 1610090762000  > 16101266 61416
-    //  2021-01-08 18:26:02 1610101562000  > 16101266 53916
-
-    //  2021-01-09 12:06:02 1610165162000 > 16101266 66723
-    //  2021-01-10 12:06:02 1610251562000 > 16101266 63698
-    //  2021-01-11 12:06:02 1610337962000 > 16101266 60673
-    //  2021-01-15 12:06:02 1610683562000 > 16101266 48573
-
-    // 1610427516779
-    // 1610427516958
-
-    // 1610126676779
-    // 1610126676958
-
-    // 1610126676759
-
-    // 1610126678890
-    // 1610126676958
-
-    // 1610427516691
-    // 1610427516731
-
-    //1610427516556
-    //1610427516535
-
     public static final String YYYYMMDDHHMM = "yyyy-mm-dd HH:mm";
 
     public static void format(Long date,String format){
@@ -393,4 +364,123 @@ public class SimpleTest1 {
         //去除强引用
         obj = null;
     }
+
+
+    @Test
+    public void test1_15(){
+        String result = doPost("http://docker1-oms.hongrenshuo.tv/v1/radio/drama/time/add", "", "UTF-8",6000,6000);
+        System.out.println("result:"+result);
+    }
+
+    public static String doPost(String url, String param, String contentType, Integer readTimeout, Integer connectTimeout){
+        PrintWriter out = null;
+        BufferedReader in = null;
+        String result = "";
+        try
+        {
+            URL realUrl = new URL(url);
+            // 打开和URL之间的连接
+            HttpURLConnection conn = (HttpURLConnection) realUrl.openConnection();
+            // 设置通用的请求属性
+            conn.setRequestProperty("accept", "*/*");
+            conn.setRequestProperty("connection", "Keep-Alive");
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", contentType);
+            conn.setRequestProperty("charset", "utf-8");
+            conn.setUseCaches(false);
+            // 发送POST请求必须设置如下两行
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setReadTimeout(readTimeout);
+            conn.setConnectTimeout(connectTimeout);
+
+            if (param != null && !param.trim().equals(""))
+            {
+                // 获取URLConnection对象对应的输出流
+                out = new PrintWriter(conn.getOutputStream());
+                // 发送请求参数
+                out.print(param);
+                // flush输出流的缓冲
+                out.flush();
+            }
+            // 定义BufferedReader输入流来读取URL的响应
+            in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null)
+            {
+                result += line;
+            }
+        }
+        catch (Exception e)
+        {
+        }
+        // 使用finally块来关闭输出流、输入流
+        finally
+        {
+            try
+            {
+                if (out != null)
+                {
+                    out.close();
+                }
+                if (in != null)
+                {
+                    in.close();
+                }
+            }
+            catch (IOException ex)
+            {
+            }
+        }
+        return result;
+    }
+
+
+    @Test
+    public void test1_16(){
+        List<Integer> a = Arrays.asList(new Integer[]{1,2,3,4,5,6,7,8,9,10,11});
+        int BATCH_SIZE = 5;
+        int count = a.size();
+        int size = count / BATCH_SIZE;
+        for (int i = 1; i <= size + 1; i++) {
+            int start = (i - 1) * BATCH_SIZE;
+            int end = Math.min((i * BATCH_SIZE), count);
+            System.out.println(start + " && " + end);
+            List<Integer> integers = a.subList(start, end);
+            System.out.println("size:"+integers.size());
+            integers.forEach(System.out::println);
+        }
+
+    }
+
+
+    @Test
+    public void test1_17(){
+        ThreadLocal<Object> threadLocal = new ThreadLocal<>();
+        Byte[] bytes = new Byte[5*1024*1024/8];
+        int length = bytes.length;
+        System.out.println(length);
+        threadLocal.set(bytes);
+//        threadLocal.remove();
+
+        threadLocal = null;
+        System.gc();
+
+        new Thread(() -> {
+            ThreadLocal<Object> threadLocal2 = new ThreadLocal<>();
+            Byte[] bytes2 = new Byte[2*1024*1024/8];
+            threadLocal2.set(bytes2);
+            Thread t2 = Thread.currentThread();
+            System.out.println(t2.getName());
+        }).start();
+
+    }
+
+    @Test
+    public void test1_18(){
+        Byte[] bytes = new Byte[5*1024*1024/8];
+//        bytes = null;
+        Byte[] byte2 = new Byte[5*1024*1024/8];
+    }
+
 }

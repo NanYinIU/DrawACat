@@ -1,7 +1,8 @@
 package cat.test;
 
 import org.junit.Test;
-import sun.jvm.hotspot.runtime.VM;
+import org.openjdk.jol.info.ClassLayout;
+import org.openjdk.jol.vm.VM;
 import sun.jvm.hotspot.types.basic.BasicTypeDataBase;
 import sun.misc.GC;
 
@@ -462,25 +463,29 @@ public class SimpleTest1 {
         System.out.println(length);
         threadLocal.set(bytes);
 //        threadLocal.remove();
+//        threadLocal = null;
+        bytes = null;
+//        System.gc();
 
-        threadLocal = null;
-        System.gc();
+        ThreadLocal<Object> threadLocal2 = new ThreadLocal<>();
+        Byte[] bytes2 = new Byte[2*1024*1024/8];
+        threadLocal2.set(bytes2);
 
-        new Thread(() -> {
-            ThreadLocal<Object> threadLocal2 = new ThreadLocal<>();
-            Byte[] bytes2 = new Byte[2*1024*1024/8];
-            threadLocal2.set(bytes2);
-            Thread t2 = Thread.currentThread();
-            System.out.println(t2.getName());
-        }).start();
+
+//        new Thread(() -> {
+//            ThreadLocal<Object> threadLocal2 = new ThreadLocal<>();
+//            Byte[] bytes2 = new Byte[2*1024*1024/8];
+//            threadLocal2.set(bytes2);
+//            Thread t2 = Thread.currentThread();
+//            System.out.println(t2.getName());
+//        }).start();
 
     }
 
     @Test
     public void test1_18(){
-        Byte[] bytes = new Byte[5*1024*1024/8];
-//        bytes = null;
-        Byte[] byte2 = new Byte[5*1024*1024/8];
+//        System.out.println(VM.current().details());
+        Byte[] byte2 = new Byte[(1024 * 1024 * 6) / 8  ];
     }
 
 }

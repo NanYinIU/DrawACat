@@ -36,6 +36,9 @@ public class ObjectStructure {
 //        System.out.println(hashCode);
         System.gc();
         System.out.println(ClassLayout.parseInstance(o).toPrintable());
+
+        Byte[] bytes = new Byte[(1024 * 1024 * 6) /4];
+        System.out.println(ClassLayout.parseInstance(bytes).toPrintable());
 //        synchronized (o){
 //            System.out.println(ClassLayout.parseInstance(o).toPrintable());
 //        }
@@ -53,5 +56,6 @@ public class ObjectStructure {
 //        System.out.println(ClassLayout.parseInstance(b).toPrintable());
 //        byte byt = 'c';
 //        System.out.println(ClassLayout.parseInstance(byt).toPrintable());
+
     }
 }

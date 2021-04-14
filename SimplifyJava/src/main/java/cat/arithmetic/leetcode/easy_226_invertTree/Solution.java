@@ -32,7 +32,7 @@ import com.sun.org.apache.xerces.internal.xs.ItemPSVI;
  * @version 1.0
  * @date 2021-04-13
  */
-public class InvertTree {
+public class Solution {
 
 
     public TreeNode invertTree(TreeNode root) {

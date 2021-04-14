@@ -40,7 +40,7 @@ import java.util.List;
  * @version 1.0
  * @date 2021-04-13
  */
-public class MinDiffInBST {
+public class Solution {
 
     private int minVal = Integer.MAX_VALUE;
     private List<Integer> dp = new ArrayList<>();

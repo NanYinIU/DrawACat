@@ -1,9 +1,5 @@
 package cat.arithmetic.leetcode.middle_208_trie;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * 208. 实现 Trie (前缀树)
  * <p>
@@ -52,22 +48,22 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @date 2021-04-14
  */
-class Trie {
-    private Trie[] children;
+class Solution {
+    private Solution[] children;
     private boolean isEnd;
 
-    public Trie() {
-        children = new Trie[26];
+    public Solution() {
+        children = new Solution[26];
         isEnd = false;
     }
 
     public void insert(String word) {
-        Trie node = this;
+        Solution node = this;
         for (int i = 0; i < word.length(); i++) {
             char ch = word.charAt(i);
             int index = ch - 'a';
             if (node.children[index] == null) {
-                node.children[index] = new Trie();
+                node.children[index] = new Solution();
             }
             node = node.children[index];
         }
@@ -75,7 +71,7 @@ class Trie {
     }
 
     public boolean search(String word) {
-        Trie node = searchPrefix(word);
+        Solution node = searchPrefix(word);
         return node != null && node.isEnd;
     }
 
@@ -83,8 +79,8 @@ class Trie {
         return searchPrefix(prefix) != null;
     }
 
-    private Trie searchPrefix(String prefix) {
-        Trie node = this;
+    private Solution searchPrefix(String prefix) {
+        Solution node = this;
         for (int i = 0; i < prefix.length(); i++) {
             char ch = prefix.charAt(i);
             int index = ch - 'a';

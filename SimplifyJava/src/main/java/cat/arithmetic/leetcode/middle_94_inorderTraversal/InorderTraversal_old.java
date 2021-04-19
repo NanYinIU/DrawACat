@@ -1,4 +1,6 @@
-package cat.arithmetic.leetcode.tree;
+package cat.arithmetic.leetcode.middle_94_inorderTraversal;
+
+import cat.arithmetic.leetcode.tree.TreeNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +42,7 @@ import java.util.List;
  * @version 1.0
  * @date 2020-11-22
  */
-public class InorderTraversal {
+public class InorderTraversal_old {
 
     List<Integer> result = new ArrayList<>();
 

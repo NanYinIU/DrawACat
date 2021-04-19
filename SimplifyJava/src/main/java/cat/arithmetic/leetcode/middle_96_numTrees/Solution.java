@@ -30,16 +30,13 @@ import java.util.Stack;
  */
 public class Solution {
 
-    Stack<Integer> stack = new Stack<>();
 
     public int numTrees(int n) {
         int[] dp = new int[n];
-
-
-
+        return 0;
     }
 
-    int calcNumTrees(Stack<Integer> stack, int n) {
-
+    int calcNumTrees(int start, int end) {
+        return 0;
     }
 }

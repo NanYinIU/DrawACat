@@ -1,4 +1,6 @@
-package cat.arithmetic.leetcode.tree;
+package cat.arithmetic.leetcode.easy_100_isSameTree;
+
+import cat.arithmetic.leetcode.tree.TreeNode;
 
 /**
  * 100. 相同的树
@@ -11,7 +13,7 @@ package cat.arithmetic.leetcode.tree;
  * @version 1.0
  * @date 2020-11-17
  */
-public class IsSameTree {
+public class IsSameTree_old {
 
     public boolean isSameTree(TreeNode p, TreeNode q) {
         if (p == null && q == null) {

@@ -26,6 +26,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Comparator;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -137,16 +141,52 @@ public class SimpleTest1 {
         System.out.println(treeMap);
     }
 
+    private final static long ONE_DAY_MILLISECOND = 24 * 60 * (60-1) * 1000L;
+
     @Test
     public void test1_4(){
-        Long date = 1609123830000l;
-        String mdd = new SimpleDateFormat("yyyyMMdd").format(new Date(date));
-        System.out.println(mdd);
+        Long date = 1612022399000L;
+        Long node = 1611936000000L;
+        long tb = ONE_DAY_MILLISECOND;
+        System.out.println(tb);
+        Long date2 = node + tb;
+        System.out.println(24 * 60 * 60 * 1000 - 1000);
+//        Long date3 = node + 86399000;
+        System.out.println(date2);
+//        System.out.println(date3);
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(node);
+
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTimeInMillis(date2);
+        cal2.set(Calendar.YEAR, cal.get(Calendar.YEAR));
+        cal2.set(Calendar.MONTH, cal.get(Calendar.MONTH));
+        cal2.set(Calendar.DATE, cal.get(Calendar.DATE));
+        long timeInMillis = cal2.getTimeInMillis();
+        System.out.println(timeInMillis);
 
     }
 
     @Test
     public void test1_5(){
+        Long node = 1611936000000L;
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(node);
+        ZoneId zoneId = java.time.ZoneId.systemDefault();
+        long l = LocalDateTime
+                .ofInstant(Instant.ofEpochSecond(node), ZoneOffset.ofHours(8))
+//                .withHour(23).withMinute(59).withSecond(59).withNano(59)
+                .toInstant(ZoneOffset.ofHours(8)).toEpochMilli();
+        long l1 = LocalDate.now().atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() / 1000;
+//        long l = LocalDate.ofEpochDay(node).atTime(23, 59, 59).atZone(zoneId).toInstant().toEpochMilli();
+        System.out.println(l);
+        System.out.println(l1);
+//        System.out.println(LocalDate.of(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DATE)).atTime(23, 59, 59).atZone(zoneId).toInstant().toEpochMilli());
+
+        Date date = new Date(node);
+        Instant instant = date.toInstant();
+        long l3 = instant.atZone(zoneId).toLocalDate().atTime(23,59,59).atZone(zoneId).toInstant().toEpochMilli();
+        System.out.println(l3);
        List<Integer> list = Arrays.asList(1,2,3,4,5);
         List<Integer> collect = list.stream().filter(x -> x == 2).collect(Collectors.toList());
         collect.forEach(System.out::println);
@@ -297,6 +337,9 @@ public class SimpleTest1 {
 
     @Test
     public void test1_11(){
+        List<Integer> list = Arrays.asList(1,2,11,9,3,5,0);
+        List<Integer> collect = list.stream().sorted(Comparator.comparing(Integer::intValue)).collect(Collectors.toList());
+        collect.forEach(System.out::println);
         Long a = -28800000L;
         String yyyyMMdd = new SimpleDateFormat("yyyyMMdd").format(new Date(a));
         System.out.println(yyyyMMdd);

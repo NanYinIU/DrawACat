@@ -25,13 +25,26 @@ public class Iterative {
      *
      * 前序就是针对每一个子树，都先输出根节点、左节点、右节点
      *
-     * 1 2 3
-     * 栈内：2进栈 1进栈 1出栈 2 出栈 3进栈 3出栈
+     * 需要打印完左侧节点才考虑右侧节点
      *
      */
 
     public List<Integer> preorderTraversal(TreeNode root) {
-        return null;
+        Stack<TreeNode> stack = new Stack<>();
+        List<Integer> result = new ArrayList<>();
+        while (root != null || !stack.empty()) {
+            if(root !=null){
+                result.add(root.val);
+                // 打印所有左侧节点(包含root)
+                stack.push(root);
+                root = root.left;
+            }else if(!stack.empty()){
+                TreeNode node = stack.pop();
+                // 遍历到右边
+                root = node.right;
+            }
+        }
+        return result;
     }
 
     /**

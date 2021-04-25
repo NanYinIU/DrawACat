@@ -21,7 +21,7 @@ public class Iterative {
 
 
     /**
-     * 前序遍历
+     * 前序遍历 根左遍历
      *
      * 前序就是针对每一个子树，都先输出根节点、左节点、右节点
      *
@@ -48,7 +48,7 @@ public class Iterative {
     }
 
     /**
-     * 中序遍历
+     * 中序遍历 左根遍历
      * 中序就是针对每一个子树，都先输出左节点、根节点、右节点
      * 使用迭代的方式就是，遇到root不为null压栈，否则判断栈是否为空，输出元素，
      * 设为弹出节点的右节点，直至遍历结束
@@ -71,11 +71,29 @@ public class Iterative {
     }
 
     /**
-     * 后序遍历
+     * 后序遍历 和先序遍历类似，但是是右根遍历，然后翻转
      * 后序遍历就是针对每一个子树，都先输出左节点、右节点、根节点
      */
     private void postOrder(TreeNode root) {
+        Stack<TreeNode> stack = new Stack<>();
+        Stack<TreeNode> stack1 = new Stack<>();
+        List<Integer> result = new ArrayList<>();
+        while (root !=null || !stack.isEmpty()){
+            if(root !=null){
+                stack1.push(root);
+                stack.push(root);
+                root = root.right;
+            }else if(!stack.isEmpty()){
+                // 遇到叶子节点了
+                TreeNode pop = stack.pop();
+                root = root.left;
+            }
+        }
 
+        // 翻转
+        while(!stack1.isEmpty()){
+            result.add(stack1.pop().val);
+        }
     }
 
 

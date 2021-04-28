@@ -4,6 +4,7 @@ import cat.arithmetic.leetcode.tree.TreeNode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class LevelSearch {
 
 
 
-    public List<List<Integer>> levelOrder(TreeNode root) {
+    public List<List<Integer>> levelOrder2(TreeNode root) {
         List<List<Integer>> result = new LinkedList<>();
         Queue<TreeNode> queue = new LinkedList<>();
         // 怎么知道这一层开始了，或者结束了？
@@ -47,19 +48,17 @@ public class LevelSearch {
         Integer currentLevel = 0;
         while(!queue.isEmpty()){
             TreeNode node = queue.poll();
-            System.out.println(node.val);
             Integer level = map.get(node);
             if(node.left !=null){
                 queue.add(node.left);
-                map.put(node.left, currentLevel + 1);
+                map.put(node.left, level + 1);
             }
             if(node.right !=null){
                 queue.add(node.right);
-                map.put(node.right, currentLevel + 1);
+                map.put(node.right, level + 1);
             }
             if(currentLevel.equals(level)){
-                System.out.println(level + " and " + root.val);
-                nodeList.add(root.val);
+                nodeList.add(node.val);
             }else{
                 result.add(nodeList);
                 nodeList.clear();
@@ -67,6 +66,36 @@ public class LevelSearch {
             }
         }
         result.add(nodeList);
+        return result;
+    }
+
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        if(root == null){
+            return Collections.EMPTY_LIST;
+        }
+        List<List<Integer>> result = new LinkedList<>();
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        while(!queue.isEmpty()){
+            List<Integer> temp = new LinkedList<>();
+            int size = queue.size();
+            System.out.println(size);
+            while(size > 0){
+                TreeNode node = queue.poll();
+                if(node == null){
+                    break;
+                }
+                temp.add(node.val);
+                if(node.left !=null){
+                    queue.add(node.left);
+                }
+                if(node.right !=null){
+                    queue.add(node.right);
+                }
+                size -- ;
+            }
+            result.add(temp);
+        }
         return result;
     }
 

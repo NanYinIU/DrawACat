@@ -37,6 +37,7 @@ public class LevelSearch {
 
 
 
+    @Deprecated
     public List<List<Integer>> levelOrder2(TreeNode root) {
         List<List<Integer>> result = new LinkedList<>();
         Queue<TreeNode> queue = new LinkedList<>();
@@ -45,19 +46,19 @@ public class LevelSearch {
         List<Integer> nodeList = new ArrayList<>();
         map.put(root,1);
         queue.add(root);
-        Integer currentLevel = 0;
+        int currentLevel = 1;
         while(!queue.isEmpty()){
             TreeNode node = queue.poll();
-            Integer level = map.get(node);
+            int level = map.get(node);
             if(node.left !=null){
                 queue.add(node.left);
-                map.put(node.left, level + 1);
+                map.put(node.left, currentLevel + 1);
             }
             if(node.right !=null){
                 queue.add(node.right);
-                map.put(node.right, level + 1);
+                map.put(node.right, currentLevel + 1);
             }
-            if(currentLevel.equals(level)){
+            if(currentLevel == level){
                 nodeList.add(node.val);
             }else{
                 result.add(nodeList);

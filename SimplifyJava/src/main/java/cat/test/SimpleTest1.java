@@ -544,4 +544,9 @@ public class SimpleTest1 {
 
     }
 
+    @Test
+    public void test1_19(){
+        System.out.println(true && true && false);
+    }
+
 }

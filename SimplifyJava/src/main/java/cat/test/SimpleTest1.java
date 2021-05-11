@@ -527,21 +527,7 @@ public class SimpleTest1 {
 
     @Test
     public void test1_18(){
-//        System.out.println(VM.current().details());
-        Byte[] byte2 = new Byte[(1024 * 1024 * 6) / 8  ];
-
-        System.out.println(new Date(1616659200089L));
-        System.out.println(new Date(1619251200089L));
-
-        Map<Integer,String> map = new HashMap<>();
-        List<Map<Integer,String>> list = new ArrayList<>();
-        list.add(map);
-        map.put(1,"1");
-        map.put(2,"2");
-
-        Map<Integer, String> integerStringMap = list.get(0);
-        System.out.println(integerStringMap.get(1));
-
+        int result = 1/0;
     }
 
 }

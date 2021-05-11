@@ -44,21 +44,28 @@ public class Solution {
      * 节点的左子树只包含小于当前节点的数。
      * 节点的右子树只包含大于当前节点的数。
      * 所有左子树和右子树自身必须也是二叉搜索树。
+     *
      * @param root
      * @return
      */
+
+    long pre = Long.MIN_VALUE;
+
     public boolean isValidBST(TreeNode root) {
         if (root == null) {
             return true;
         }
-        boolean isVaild = true;
-        if (root.left != null) {
-            isVaild = root.val > root.left.val;
+        // 访问左子树
+        if (!isValidBST(root.left)) {
+            return false;
         }
-        if (root.right != null) {
-            isVaild = root.val < root.right.val;
+        // 访问当前节点：如果当前节点小于等于中序遍历的前一个节点，说明不满足BST，返回 false；否则继续遍历。
+        if (root.val <= pre) {
+            return false;
         }
-
-        return isValidBST(root.left) && isValidBST(root.right) && isVaild;
+        pre = root.val;
+        // 访问右子树
+        return isValidBST(root.right);
     }
+
 }

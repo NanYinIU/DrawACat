@@ -530,4 +530,9 @@ public class SimpleTest1 {
         int result = 1/0;
     }
 
+    @Test
+    public void test1_19(){
+        System.out.println(true && true && false);
+    }
+
 }

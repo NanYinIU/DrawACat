@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 简单测试
@@ -527,7 +528,9 @@ public class SimpleTest1 {
 
     @Test
     public void test1_18(){
-        int result = 1/0;
+        String content = "$XXX$hahahah$YYY$档案袋$ZZZ$nsnsnnsn";
+        String z = StringUtils.replaceEach(content, new String[]{"$ZZZ$","$XXX$","$YYY$"}, new String[]{null, String.valueOf(300), "哈哈"});
+        System.out.println(z);
     }
 
     @Test

@@ -42,6 +42,14 @@ import java.util.Queue;
  * @date 2021-04-28
  */
 public class Solution {
+    /**
+     * 层序遍历的思路是使用队列存储元素，当一层结束的时候将首节点弹出，将子节点放入队列中。
+     * 难点在于如何判断一层结束？思路是做标记，标记一层的结束位置；找到弹出节点时，标记下一层结束的队列的长度，
+     * 这个长度就是下一层开始的位置。接下来就是遍历这一层，将这一层的子节点放到队列中。
+     *
+     * @param root
+     * @return
+     */
     public List<List<Integer>> levelOrder(TreeNode root) {
         // basecase
         if(root == null){

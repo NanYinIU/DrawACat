@@ -2,11 +2,17 @@ package cat.arithmetic.leetcode.middle_107_levelOrderBottom;
 
 import cat.arithmetic.leetcode.tree.TreeNode;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+
 
 /**
  *
  * 107. 二叉树的层序遍历 II
+ *
+ * 同102. 二叉树的层序遍历
  *
  * 给定一个二叉树，返回其节点值自底向上的层序遍历。 （即按从叶子节点所在层到根节点所在的层，逐层从左向右遍历）
  *
@@ -36,6 +42,33 @@ import java.util.List;
  */
 public class Solution {
     public List<List<Integer>> levelOrderBottom(TreeNode root) {
-        return null;
+        if(root == null){
+            return Collections.EMPTY_LIST;
+        }
+        List<List<Integer>> result = new LinkedList<>();
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        while (queue.size() > 0) {
+            int size = queue.size();
+            List<Integer> list = new LinkedList<>();
+            while (size > 0) {
+                TreeNode node = queue.poll();
+                if (node == null) {
+                    continue;
+                }
+                list.add(node.val);
+                if (node.left != null) {
+                    queue.add(node.left);
+                }
+                if (node.right != null) {
+                    queue.add(node.right);
+                }
+                size --;
+            }
+            result.add(0,list);
+        }
+        return result;
     }
+
+
 }

@@ -2,6 +2,7 @@ package cat.arithmetic.leetcode.middle_102_levelOrder;
 
 import cat.arithmetic.leetcode.tree.TreeNode;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,20 +43,20 @@ import java.util.Queue;
  */
 public class Solution {
     public List<List<Integer>> levelOrder(TreeNode root) {
+        // basecase
         if(root == null){
             return Collections.EMPTY_LIST;
         }
-        List<List<Integer>> result = new LinkedList<>();
+        List<List<Integer>> result = new ArrayList<>();
         Queue<TreeNode> queue = new LinkedList<>();
         queue.add(root);
-        while(!queue.isEmpty()){
-            List<Integer> temp = new LinkedList<>();
+        while (queue.size() > 0){
             int size = queue.size();
-            System.out.println(size);
+            List<Integer> temp = new ArrayList<>();
             while(size > 0){
                 TreeNode node = queue.poll();
                 if(node == null){
-                    break;
+                    continue;
                 }
                 temp.add(node.val);
                 if(node.left !=null){
@@ -64,7 +65,7 @@ public class Solution {
                 if(node.right !=null){
                     queue.add(node.right);
                 }
-                size -- ;
+                size --;
             }
             result.add(temp);
         }

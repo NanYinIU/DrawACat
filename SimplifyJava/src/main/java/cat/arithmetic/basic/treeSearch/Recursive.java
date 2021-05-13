@@ -1,6 +1,6 @@
 package cat.arithmetic.basic.treeSearch;
 
-import cat.arithmetic.leetcode.tree.TreeNode;
+import cat.arithmetic.leetcode.treeTag.TreeNode;
 
 /**
  *

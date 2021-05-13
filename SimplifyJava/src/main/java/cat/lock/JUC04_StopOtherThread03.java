@@ -1,6 +1,6 @@
-package cat.JUC;
+package cat.lock;
 
-import java.util.concurrent.locks.LockSupport;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @author nanyin
@@ -8,11 +8,8 @@ import java.util.concurrent.locks.LockSupport;
  * @description TODO
  * @create 14:57 2020-05-17
  */
-public class JUC04_StopOtherThread04 {
+public class JUC04_StopOtherThread03 {
     int number = 0;
-
-    Thread t1 = null;
-    Thread t2 = null;
 
     private void increase() {
         number++;
@@ -23,17 +20,16 @@ public class JUC04_StopOtherThread04 {
     }
 
     public static void main(String[] args) {
+        JUC04_StopOtherThread03 s = new JUC04_StopOtherThread03();
 
+        CountDownLatch latch1 = new CountDownLatch(1);
+        CountDownLatch latch2 = new CountDownLatch(1);
 
-
-        JUC04_StopOtherThread04 s = new JUC04_StopOtherThread04();
-
-
-        s.t1 = new Thread(() -> {
+        new Thread(() -> {
             try {
                 if (s.size() != 5) {
-                  LockSupport.park();
-                  LockSupport.unpark(s.t2);
+                    latch1.await();
+                    latch2.countDown();
                 }
                 System.out.println("print that message !!!");
 
@@ -42,14 +38,15 @@ public class JUC04_StopOtherThread04 {
                 e.printStackTrace();
             } finally {
             }
-        });
+        }).start();
 
-        s.t2 = new Thread(() -> {
+        new Thread(() -> {
             try {
                 while (s.size() < 10) {
                     if (s.size() == 5) {
-                        LockSupport.unpark(s.t1);
-                        LockSupport.park();
+                        latch1.countDown();
+
+                        latch2.await();
                     }
                     s.increase();
                     System.out.println("current number size is :" + s.size());
@@ -59,9 +56,6 @@ public class JUC04_StopOtherThread04 {
             } finally {
             }
 
-        });
-
-        s.t1.start();
-        s.t2.start();
+        }).start();
     }
 }

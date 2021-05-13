@@ -1,4 +1,4 @@
-package cat.JUC;
+package cat.lock;
 
 /**
  * @author nanyin

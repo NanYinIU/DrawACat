@@ -1,4 +1,4 @@
-package cat.JUC;
+package cat.lock;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

@@ -1,4 +1,4 @@
-package cat.javap;
+package cat.jvm.javap;
 
 /**
  * 1. java SyncTest.java 得到class 文件

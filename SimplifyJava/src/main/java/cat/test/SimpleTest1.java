@@ -1,5 +1,6 @@
 package cat.test;
 
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import org.junit.Test;
 import org.openjdk.jol.info.ClassLayout;
 import org.openjdk.jol.vm.VM;
@@ -42,6 +43,10 @@ import java.util.Random;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * 简单测试
@@ -535,7 +540,22 @@ public class SimpleTest1 {
 
     @Test
     public void test1_19(){
-        System.out.println(true && true && false);
+        try {
+            String cellphone = decrypt("nIgqOoMVGUOhsbEXR/GeKQ==");
+            System.out.println(cellphone);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
+    public static String decrypt(String content) throws Exception {
+        SecretKeySpec skey = new SecretKeySpec("c98be79a4347bc97".getBytes(), "AES");
+        Cipher cipher = Cipher.getInstance("AES/CBC/Pkcs5Padding");
+        IvParameterSpec iv = new IvParameterSpec("93x0ue23c2c9h8km".getBytes());
+        cipher.init(2, skey, iv);
+        byte[] encrypted = cipher.doFinal(Base64.decode(content));
+        return new String(encrypted);
+    }
+
 
 }

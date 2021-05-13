@@ -55,14 +55,13 @@ public class Solution {
             return null;
         }
         // 后序的最后的一个节点是根节点
-        int rootVal = postorder[p_end - 1];
+        int rootVal = postorder[p_end];
         TreeNode root = new TreeNode(rootVal);
+        // 获取root在中序中的序号
         int root_index = memo.get(rootVal);
-        System.out.println(root_index);
-        int le = root_index - i_start;
-        System.out.println(le);
-        root.left = buildTreeHelper(inorder, i_start, root_index - 1, postorder, p_start, p_start + le - 1);
-        root.right = buildTreeHelper(inorder, root_index + 1, root_index + le , postorder, p_start + le + 1, p_end - 1);
+        int le = i_end - root_index;
+        root.left = buildTreeHelper(inorder, i_start, root_index - 1, postorder, p_start, p_end - le - 1);
+        root.right = buildTreeHelper(inorder, root_index + 1, i_end , postorder, p_start + le, p_end - 1);
         return root;
     }
 

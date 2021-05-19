@@ -51,6 +51,7 @@ public class Recursive {
         }
         postOrder(root.left);
         postOrder(root.right);
+        // 建立连接 比如root.next=xxx
         System.out.println(root.val);
     }
 

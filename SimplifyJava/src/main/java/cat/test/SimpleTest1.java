@@ -557,5 +557,12 @@ public class SimpleTest1 {
         return new String(encrypted);
     }
 
+    @Test
+    public void test1_20(){
+        int[] dp = new int[20];
+        System.out.println(dp[2]);
+
+    }
+
 
 }

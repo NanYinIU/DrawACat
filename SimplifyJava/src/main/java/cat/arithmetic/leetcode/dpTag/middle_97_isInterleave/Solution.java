@@ -45,37 +45,30 @@ package cat.arithmetic.leetcode.dpTag.middle_97_isInterleave;
  */
 public class Solution {
     public boolean isInterleave(String s1, String s2, String s3) {
-        int n1 = s1.length();
-        int n2 = s2.length();
-        int n3 = s3.length();
-        if (n1 == 0 && n2 == 0 && n3 == 0) {
-            return true;
-        }
-        if (n3 != n1 + n2) {
+        int l1 = s1.length(), l2 = s2.length(), l3 = s3.length();
+        if (l1 + l2 != l3) {
             return false;
         }
-        boolean[] dp = new boolean[n3];
-        for (int i = 0; i < n3; i++) {
-            dp[i] = false;
+        boolean[][] dp = new boolean[l1 + 1][l2 + 1];
+        dp[0][0] = true;
+        for (int i = 1; i < l1 + 1; i++) {
+            dp[i][0] = dp[i - 1][0] && s1.charAt(i - 1) == s3.charAt(i - 1);
         }
-        int index1 = 0, index2 = 0;
-        for (int i = 0; i < n3 - 1; i++) {
-            boolean b1 = s3.charAt(i) == s1.charAt(index1);
-            boolean b2 = s3.charAt(i) == s2.charAt(index2);
-            if (b1) {
-                index1++;
-            } else if (b2) {
-                index2++;
-            }
-            if (i == 0) {
-                dp[i] = b1 || b2;
-            }
-            dp[i + 1] = dp[i] && (b1 || b2);
-            if (!dp[i + 1]) {
-                System.out.println(i + "&&index1==" + index1 + "&&b1=" + b1 + "&&b2=" + b2 + "&&index2==" + index2 + "&&dp[i-1]" + dp[i]);
-                return false;
+        for (int i = 1; i < l2 + 1; i++) {
+            dp[0][i] = dp[0][i - 1] && s2.charAt(i - 1) == s3.charAt(i - 1);
+        }
+        for (int i = 1; i < l1 + 1; i++) {
+            for (int j = 1; j < l2 + 1; j++) {
+                dp[i][j] =
+                        (dp[i][j - 1] && s2.charAt(j - 1) == s3.charAt(i + j - 1))
+                        || (dp[i - 1][j] && s1.charAt(i - 1) == s3.charAt(i + j - 1));
             }
         }
-        return true;
+        return dp[l1][l2];
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        System.out.println(solution.isInterleave("aabcc","dbbca","aadbbbaccc"));
     }
 }

@@ -62,10 +62,13 @@ public class Solution {
             List<Integer> current = triangle.get(i);
             for (int j = 0; j < current.size(); j++) {
                 if (j == 0) {
+                    // 最左边，找上一层的正上方的元素
                     dp[i][j] = dp[i - 1][j] + current.get(j);
                 } else if (j == current.size() - 1) {
+                    // 最右边，找上一层的正上方-1的元素
                     dp[i][j] = dp[i - 1][j - 1] + current.get(j);
                 } else {
+                    // 找到上方两个元素其中最小的
                     dp[i][j] = Math.min(dp[i - 1][j], dp[i - 1][j - 1]) + current.get(j);
                 }
             }

@@ -38,11 +38,10 @@ package cat.arithmetic.leetcode.dpTag.middle_121_maxProfit;
  * @date 2021-06-01
  */
 public class Solution {
-    /*
+    /**
      * TODO：这种做法不算是动态规划，只是通过一直在下探最小价格，不断算最大差值得到的结果，可以考虑下用动态规划的思路
      */
     public int maxProfit(int[] prices) {
-     */
         int minPrice = Integer.MAX_VALUE;
         int max = 0;
         for (int i = 0; i < prices.length; i++) {

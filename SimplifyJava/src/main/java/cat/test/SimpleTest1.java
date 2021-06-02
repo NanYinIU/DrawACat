@@ -563,6 +563,13 @@ public class SimpleTest1 {
         String a2 = "x2";
         System.out.println(a1.contains(a2));
 
+        System.out.println(count(1));
+        System.out.println(count(4));
+        System.out.println(Integer.toBinaryString(1));
+    }
+
+    public static int count(int n) {
+        return (int) (Math.sqrt(n) + n % 2);
     }
 
 

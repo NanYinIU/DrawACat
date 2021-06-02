@@ -559,8 +559,9 @@ public class SimpleTest1 {
 
     @Test
     public void test1_20(){
-        int[] dp = new int[20];
-        System.out.println(dp[2]);
+        String a1 = "x123";
+        String a2 = "x2";
+        System.out.println(a1.contains(a2));
 
     }
 

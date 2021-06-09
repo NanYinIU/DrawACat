@@ -37,13 +37,19 @@ import java.util.List;
 public class Solution {
     public boolean wordBreak(String s, List<String> wordDict) {
         int n = s.length();
+        // 定义dp
         boolean[] dp = new boolean[n + 1];
+        // 初始化dp
         dp[0] = true;
+        // 状态转移
         for (int i = 1; i <= n; i++) {
-            for (int j = 0; j < i; j++) {
-                dp[i] = dp[j] && wordDict.contains(s.substring(j, i));
-                if (dp[i]) {
-                    break;
+            for (String word : wordDict) {
+                int wn = word.length();
+                if (i >= wn) {
+                    dp[i] = dp[i - wn] && s.substring(i - wn, i).equals(word);
+                    if (dp[i]) {
+                        break;
+                    }
                 }
             }
         }

@@ -51,17 +51,31 @@ import java.util.Arrays;
  */
 public class Solution {
     public int coinChange(int[] coins, int amount) {
-        int max = amount + 1;
+
+//        # 初始化 base case
+//        dp[0][0][...] = base
+//        # 进行状态转移
+//        for 状态1 in 状态1的所有取值：
+//          for 状态2 in 状态2的所有取值：
+//              for ...
+//                  dp[状态1][状态2][...] = 求最值(选择1，选择2...)
+        if(amount < 0){
+            return -1;
+        }
+        // 定义dp
         int[] dp = new int[amount + 1];
-        Arrays.fill(dp, max);
+        Arrays.fill(dp,amount+1);
+        // 初始化basecase
         dp[0] = 0;
+        // 状态转移
         for (int i = 1; i <= amount; i++) {
-            for (int j = 0; j < coins.length; j++) {
-                if (coins[j] <= i) {
-                    dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);
-                }
+            // 状态1
+            for (int coin : coins) {
+                // 状态2
+                if(i >= coin)
+                dp[i] = Math.min(dp[i], dp[i - coin] + 1);
             }
         }
-        return dp[amount] > amount ? -1 : dp[amount];
+        return dp[amount] == amount + 1 ? -1 : dp[amount];
     }
 }

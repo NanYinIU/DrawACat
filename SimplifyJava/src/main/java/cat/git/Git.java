@@ -26,4 +26,18 @@ public class Git {
         // 47b772d HEAD@{1}: commit: git reflog test1
 
     }
+
+    /**
+     * 提交了 commit 以后立马发现，妈蛋，我忘了在某个等号后面加空格了。
+     * 当然，你也可以提交一个新的 commit 然后利用 rebase -i 命令来合并它们，
+     * 但我觉得我的这种方式比你快 100 万倍
+     *
+     * 使用 git commit --amend 追加到最近的一个commit上,最后只能看到一条commit
+     *
+     */
+    @Test
+    public void amendTest(){
+        System.out.println("commit1");
+        System.out.println("commit2");
+    }
 }

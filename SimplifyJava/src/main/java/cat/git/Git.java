@@ -20,5 +20,10 @@ public class Git {
     @Test
     public void reflogTest(){
         System.out.println("commit1");
+        // System.out.println("commit2");
+
+        // 8ad204c (HEAD -> master, origin/master) HEAD@{0}: commit: git reflog test2
+        // 47b772d HEAD@{1}: commit: git reflog test1
+
     }
 }

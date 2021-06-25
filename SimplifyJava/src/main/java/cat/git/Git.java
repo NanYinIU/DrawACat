@@ -34,10 +34,33 @@ public class Git {
      *
      * 使用 git commit --amend 追加到最近的一个commit上,最后只能看到一条commit
      *
+     * 修改commit信息，也可以直接使用 git commit --amend，在编辑器里面修改后即可
      */
     @Test
     public void amendTest(){
         System.out.println("commit1");
         System.out.println("commit2");
+    }
+
+    /**
+     *
+     * 哎呦我去，我把这个 commit 提交错分支了！
+     * 撤回这次提交，但保留改动的内容
+     * git reset HEAD~ --soft // HEAD~表示最近一次的提交
+     * git stash
+     * 现在切到正确的那个分支去
+     * git checkout name-of-the-correct-branch
+     * git stash pop
+     * git add . # 或者你可以添加指定的文件
+     * git commit -m "your message here";
+     * 现在你的改动就在正确的分支上啦
+     */
+    public void stashTest(){
+
+    }
+
+    public void diff(){
+        System.out.println("after add use git diff .... 看不到diff");
+        System.out.println("after add use git diff --staged .... 看的到diff");
     }
 }

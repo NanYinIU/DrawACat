@@ -1,6 +1,11 @@
 package cat.test;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import com.uxin.commons.api.BusinessException;
+import com.uxin.commons.json.JsonConverter;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.openjdk.jol.info.ClassLayout;
 import org.openjdk.jol.vm.VM;
@@ -30,6 +35,7 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Comparator;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
@@ -559,17 +565,127 @@ public class SimpleTest1 {
 
     @Test
     public void test1_20(){
-        String a1 = "x123";
-        String a2 = "x2";
-        System.out.println(a1.contains(a2));
-
-        System.out.println(count(1));
-        System.out.println(count(4));
-        System.out.println(Integer.toBinaryString(1));
+        DateTime dateTime = new DateTime(new Date());
+        System.out.println(new Date());
+        dateTime = dateTime.plusDays(2);
+        Date date = dateTime.millisOfDay().withMaximumValue().toDate();
+        System.out.println(date);
+        System.out.println(date.getTime());
     }
 
-    public static int count(int n) {
+    @Test
+    public void test1_21(){
+        Long a1 = 1201l;
+        Long a2 = 356l;
+        Long prop = 60l;
+        System.out.println(prop * 1.0 /100);
+        Double result = (a1-a2)*(prop* 1.0/100);
+        Long ceil = new Double(Math.ceil(result)).longValue();
+        System.out.println(ceil);
+        System.out.println(result);
+    }
+
+    @Test
+    public void test1_22(){
+        String propStr = "{\"propIds\":[{\"id\":\"70\",\"num\":\"4\"},{\"id\":\"102\",\"num\":\"23\"},{\"id\":\"112\",\"num\":\"32\"}]}";
+        JSONObject rootObject = JsonConverter.parse(propStr, JSONObject.class);
+        JSONArray propIds = rootObject.getJSONArray("propIds");
+        System.out.println(propIds);
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < propIds.size(); i++) {
+            JSONObject sonObject = propIds.getJSONObject(i);
+            Integer sonId = sonObject.getInteger("id");
+            Integer sonNum = sonObject.getInteger("num");
+            map.put(sonId, sonNum);
+        }
+    }
+
+    @Test
+    public void test1_23() {
+        Map<String,Node> map = new HashMap<>();
+        Node node1 = new Node();
+        node1.setName("1");
+        Node node2 = new Node();
+        node2.setName("2");
+
+        map.put("1",node1);
+        map.put("2",node2);
+        map.entrySet().forEach(entry -> {
+            Node value = entry.getValue();
+            value.setName(value.getName()+"x");
+        });
+        for (Map.Entry<String, Node> stringNodeEntry : map.entrySet()) {
+            System.out.println(stringNodeEntry.getValue().getName());;
+        }
+    }
+        public static int count(int n) {
         return (int) (Math.sqrt(n) + n % 2);
+    }
+
+    @Test
+    public void test1_24(){
+        boolean ab = checkInProtect(new Date(1609516799000L));
+        System.out.println(ab);
+        List<Long> offlineNobleIds = JSONArray.parseArray("[7,8]", Long.class);
+        for (Long offlineNobleId : offlineNobleIds) {
+            System.out.println(offlineNobleId);
+        }
+    }
+
+    private boolean checkInProtect(Date renewTime) throws BusinessException {
+        // 校验是否保护期内（包含未过期）
+        Integer protectDays = 10;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = null;
+        try {
+            date = simpleDateFormat.parse("2021-08-25 23:59:59");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        DateTime dateTime = new DateTime(date);
+        DateTime time = dateTime.plusDays(1);
+        System.out.println(time.toDate().getTime());
+        return time.isAfter(DateTime.now());
+
+    }
+
+    class AExcepetion extends RuntimeException{
+        public AExcepetion(String message) {
+            super(message);
+        }
+    }
+
+    class BException extends RuntimeException{
+        public BException(String message) {
+            super(message);
+        }
+    }
+
+    class CException extends BException{
+
+        public CException(String message) {
+            super(message);
+        }
+    }
+
+    @Test
+    public void test1_25(){
+        try{
+            if(true){
+                throw new CException("c...");
+            }
+        }catch (BException e){
+            System.out.println("e...");
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Test
+    public void test1_26(){
+        Map<Long,String> map = new HashMap<>();
+        map.put(1L,"2");
+        map.put(1L,"3");
+        map.entrySet().forEach(v-> System.out.println(v.getValue()));
     }
 
 

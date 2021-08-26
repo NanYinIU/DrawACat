@@ -18,5 +18,6 @@ public class UxinTest {
         DateTime dataTime = new DateTime(1634140798000L);
         dataTime = dataTime.plusDays(3*30);
         System.out.println(dataTime.toDate().getTime());
+        System.out.println("xss");
     }
 }

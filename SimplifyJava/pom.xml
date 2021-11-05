@@ -58,6 +58,11 @@
             <artifactId>zb-api-model</artifactId>
             <version>1.1.732-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.uxin.commons</groupId>
+            <artifactId>zb-commons</artifactId>
+            <version>1.1.367</version>
+        </dependency>
     </dependencies>
 
 

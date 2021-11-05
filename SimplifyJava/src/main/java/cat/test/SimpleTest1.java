@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import com.uxin.commons.api.BusinessException;
+import com.uxin.commons.crypto.AESUtil;
 import com.uxin.commons.json.JsonConverter;
+import com.uxin.commons.util.MD5Util;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.openjdk.jol.info.ClassLayout;
@@ -547,8 +549,15 @@ public class SimpleTest1 {
     @Test
     public void test1_19(){
         try {
-            String cellphone = decrypt("JC3usLfD5bIsvXj4VscMvQ==");
+            String cellphone = decrypt("6xahlgJAutMk91b2Pyo0aw==");
             System.out.println(cellphone);
+            String cs = AESUtil.encrypt("15563056273");
+            String decrypt = AESUtil.decrypt(cs);
+            System.out.println(decrypt);
+            System.out.println(cs);
+            String password = "b9e5869984098357414b142692e0157b";
+            String calculateMD5 = MD5Util.calculateMD5(AESUtil.decrypt(password).getBytes());
+            System.out.println(calculateMD5);
         } catch (Exception e) {
             e.printStackTrace();
         }

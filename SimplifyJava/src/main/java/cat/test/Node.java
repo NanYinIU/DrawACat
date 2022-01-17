@@ -29,4 +29,12 @@ public class Node {
     }
 
     private String name;
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "length=" + length +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

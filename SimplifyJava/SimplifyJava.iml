@@ -24,7 +24,7 @@
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.4" level="project" />
     <orderEntry type="library" name="Maven: joda-time:joda-time:2.10.5" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.70" level="project" />
-    <orderEntry type="library" name="Maven: com.uxin.api.common:zb-api-model:1.1.732-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.uxin.api.common:zb-api-model:1.1.814-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20160212" level="project" />
     <orderEntry type="library" name="Maven: org.apache.poi:poi:3.8" level="project" />
     <orderEntry type="library" name="Maven: org.apache.poi:poi-ooxml:3.8" level="project" />
@@ -56,7 +56,7 @@
     <orderEntry type="library" name="Maven: javax.validation:validation-api:1.1.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.logging:jboss-logging:3.1.3.GA" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml:classmate:1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: com.uxin.commons:zb-commons:1.1.367" level="project" />
+    <orderEntry type="library" name="Maven: com.uxin.commons:zb-commons:1.1.376-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.uxin.bigdata:logsdk:1.0.3" level="project" />
     <orderEntry type="library" name="Maven: com.aliyun:aliyun-java-sdk-cdn:2.2.9" level="project" />
     <orderEntry type="library" name="Maven: com.aliyun:aliyun-java-sdk-dysmsapi:1.0.0" level="project" />

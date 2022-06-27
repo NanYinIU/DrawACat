@@ -2,14 +2,20 @@ package cat.test;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.uxin.commons.crypto.RSAEncrypt;
+import com.uxin.commons.push.common.PushFlagEnum;
+import com.uxin.commons.string.StringUtil;
 import com.uxin.commons.util.CollectionUtils;
+import com.uxin.commons.util.DateUtil;
 import com.uxin.zb.biz.commons.model.ThirdChannelType;
 import com.uxin.zb.user.service.enums.PushPlatform;
 import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import redis.clients.jedis.Tuple;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +28,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -217,6 +224,82 @@ public class UxinTest {
                 System.out.println("default");
         }
         return true;
+    }
+
+
+    @Test
+    public void test9(){
+        rsa();
+    }
+
+    public void rsa()
+    {
+        // product
+        String pwd = "IIoJzlXzbBeearavM4JpG8KrOZ5BveEYaIwQZOpngxzLRBXsdEy6YIDDQ4k9cyhimKpUvKvGE6LQMj0W7M7Sxeq8uiPTBswc5JqO99Yh+/8Q6pK/w38mVUhanJ5gUBYxhMMiMKzGtqBBPbAU8+Xey4XdQWvmjnBfQwuWZRUh4I8=";
+        // test
+        pwd = "W+HVU1yerswj3EYbqjScGNhwshE9U+yuPPC6yvs077pPCcmK4+/sNKprxbVsWB67c4vn9g3oG1oEcpVzLKyB2Z2xihsM2g4OH2PlWUH/Bnkmqom1Zf+1Huwb8m7WgfpStlOEySSJprRg/xIFID9/kl/Sa098sxWdzCtGlrfN+Sw=";
+        String password = null;
+        try {
+            password = new RSAEncrypt().decrypt(pwd);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(password);
+
+        Properties properties = new Properties();
+        properties.put("111", "2222");
+        System.out.println(properties);
+    }
+
+    @Test
+    public void test10(){
+        getPushThirdPartyChannelPushFlag(2);
+        String a = " ";
+        String[] split = a.split(",");
+        for (String s : split) {
+            System.out.println(s);
+        }
+        List<String> strings = Arrays.asList(a.split(","));
+        System.out.println(strings);
+    }
+
+    public String getPushThirdPartyChannelPushFlagFilter() {
+        return "{\"6\":\"55,30\"}";
+    }
+
+
+    public List<PushFlagEnum> getPushThirdPartyChannelPushFlag(Integer thirdFactoryEnum){
+        if (thirdFactoryEnum != null && StringUtil.isNotEmpty(getPushThirdPartyChannelPushFlagFilter())) {
+            String flags = JSONObject.parseObject(getPushThirdPartyChannelPushFlagFilter()).getString(thirdFactoryEnum.toString());
+            System.out.println(flags);
+            String[] flagsArr = StringUtils.split(flags, ",");
+            System.out.println(flagsArr.length);
+            List<PushFlagEnum> result = new ArrayList<>(3);
+            for (String flagId : flagsArr) {
+                PushFlagEnum pushFlagEnum = PushFlagEnum.get(Integer.valueOf(flagId));
+                if (pushFlagEnum != null) {
+                    result.add(pushFlagEnum);
+                }
+            }
+            return result;
+        }
+        return Collections.emptyList();
+    }
+
+    @Test
+    public void test11() throws ParseException {
+        int a = 2;
+        int b = 4;
+        if(a > b){
+
+        }else if (a*b==8){
+            System.out.println("B");
+        }
+    }
+
+
+    public void throwNPE(){
+        throw new NullPointerException();
     }
 
 

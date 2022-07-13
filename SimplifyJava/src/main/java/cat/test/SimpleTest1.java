@@ -562,10 +562,13 @@ public class SimpleTest1 {
         System.out.println(z);
     }
 
+    /**
+     * 手机号的加密解密
+     */
     @Test
     public void test1_19(){
         try {
-            String cellphone = decrypt("J6l8CB51XcrnVaxhbqVS4A==");
+            String cellphone = decrypt("Vk70FyOBlk7UlGViO0hhcQ==");
             System.out.println(cellphone);
             String cs = AESUtil.encrypt("15563056273");
 //            String cs = "hSoECNpg168q3yM3tSAmbQ==";

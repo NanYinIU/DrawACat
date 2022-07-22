@@ -568,12 +568,12 @@ public class SimpleTest1 {
     @Test
     public void test1_19(){
         try {
-            String cellphone = decrypt("Vk70FyOBlk7UlGViO0hhcQ==");
+            String cellphone = decrypt("50EX5DQxsXFXU6hhmK3HHw==");
             System.out.println(cellphone);
             String cs = AESUtil.encrypt("15563056273");
 //            String cs = "hSoECNpg168q3yM3tSAmbQ==";
-            String decrypt = AESUtil.decrypt(cs);
-            System.out.println(decrypt);
+//            String decrypt = AESUtil.decrypt(cs);
+//            System.out.println(decrypt);
 //            System.out.println(cs);
 //            String password = "b9e5869984098357414b142692e0157b";
 //            String calculateMD5 = MD5Util.calculateMD5(AESUtil.decrypt(password).getBytes());

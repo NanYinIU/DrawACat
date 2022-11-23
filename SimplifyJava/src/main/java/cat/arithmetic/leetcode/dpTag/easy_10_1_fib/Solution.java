@@ -33,12 +33,14 @@ import java.util.Collections;
  * 链接：https://leetcode-cn.com/problems/fei-bo-na-qi-shu-lie-lcof
  * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
  *
+ *
  * @author gaoguoxing
  * @version 1.0
  * @date 2021-05-24
  */
 public class Solution {
     private int num = 1000000007;
+
     public int fib(int n) {
         if(n == 0) return 0;
         if(n == 1) return 1;

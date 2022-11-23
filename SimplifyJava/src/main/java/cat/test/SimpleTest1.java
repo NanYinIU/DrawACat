@@ -1,10 +1,30 @@
 package cat.test;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import com.uxin.commons.api.BusinessException;
+import com.uxin.commons.crypto.AESUtil;
+import com.uxin.commons.json.JsonConverter;
+import com.uxin.commons.logutil.StatLog;
+import com.uxin.commons.util.CollectionUtils;
+import com.uxin.commons.util.MD5Util;
+import com.uxin.zb.biz.commons.model.PushCustomMessageType;
+import com.uxin.zb.biz.commons.model.PushType;
+import com.uxin.zb.room.service.model.RoomInfo;
+import com.uxin.zb.user.service.model.UserDeviceInfo;
+import com.uxin.zb.user.service.model.UserInfo;
+import com.uxin.zb.web.portal.user.vo.UserResp;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.openjdk.jol.info.ClassLayout;
 import org.openjdk.jol.vm.VM;
-import sun.jvm.hotspot.types.basic.BasicTypeDataBase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sun.misc.GC;
 
 import java.io.BufferedReader;
@@ -30,6 +50,7 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Comparator;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
@@ -41,6 +62,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
@@ -538,11 +562,22 @@ public class SimpleTest1 {
         System.out.println(z);
     }
 
+    /**
+     * 手机号的加密解密
+     */
     @Test
     public void test1_19(){
         try {
-            String cellphone = decrypt("nIgqOoMVGUOhsbEXR/GeKQ==");
+            String cellphone = decrypt("50EX5DQxsXFXU6hhmK3HHw==");
             System.out.println(cellphone);
+            String cs = AESUtil.encrypt("15563056273");
+//            String cs = "hSoECNpg168q3yM3tSAmbQ==";
+//            String decrypt = AESUtil.decrypt(cs);
+//            System.out.println(decrypt);
+//            System.out.println(cs);
+//            String password = "b9e5869984098357414b142692e0157b";
+//            String calculateMD5 = MD5Util.calculateMD5(AESUtil.decrypt(password).getBytes());
+//            System.out.println(calculateMD5);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -559,18 +594,308 @@ public class SimpleTest1 {
 
     @Test
     public void test1_20(){
-        String a1 = "x123";
-        String a2 = "x2";
-        System.out.println(a1.contains(a2));
-
-        System.out.println(count(1));
-        System.out.println(count(4));
-        System.out.println(Integer.toBinaryString(1));
+        DateTime dateTime = new DateTime(new Date());
+        System.out.println(new Date());
+        dateTime = dateTime.plusDays(2);
+        Date date = dateTime.millisOfDay().withMaximumValue().toDate();
+        System.out.println(date);
+        System.out.println(date.getTime());
     }
 
-    public static int count(int n) {
+    @Test
+    public void test1_21(){
+        Long a1 = 1201l;
+        Long a2 = 356l;
+        Long prop = 60l;
+        System.out.println(prop * 1.0 /100);
+        Double result = (a1-a2)*(prop* 1.0/100);
+        Long ceil = new Double(Math.ceil(result)).longValue();
+        System.out.println(ceil);
+        System.out.println(result);
+    }
+
+    @Test
+    public void test1_22(){
+        String propStr = "{\"propIds\":[{\"id\":\"70\",\"num\":\"4\"},{\"id\":\"102\",\"num\":\"23\"},{\"id\":\"112\",\"num\":\"32\"}]}";
+        JSONObject rootObject = JsonConverter.parse(propStr, JSONObject.class);
+        JSONArray propIds = rootObject.getJSONArray("propIds");
+        System.out.println(propIds);
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < propIds.size(); i++) {
+            JSONObject sonObject = propIds.getJSONObject(i);
+            Integer sonId = sonObject.getInteger("id");
+            Integer sonNum = sonObject.getInteger("num");
+            map.put(sonId, sonNum);
+        }
+    }
+
+    @Test
+    public void test1_23() {
+        Map<String,Node> map = new HashMap<>();
+        Node node1 = new Node();
+        node1.setName("1");
+        Node node2 = new Node();
+        node2.setName("2");
+
+        map.put("1",node1);
+        map.put("2",node2);
+        map.entrySet().forEach(entry -> {
+            Node value = entry.getValue();
+            value.setName(value.getName()+"x");
+        });
+        for (Map.Entry<String, Node> stringNodeEntry : map.entrySet()) {
+            System.out.println(stringNodeEntry.getValue().getName());;
+        }
+    }
+        public static int count(int n) {
         return (int) (Math.sqrt(n) + n % 2);
     }
 
+    @Test
+    public void test1_24(){
+        boolean ab = checkInProtect(new Date(1609516799000L));
+        System.out.println(ab);
+        List<Long> offlineNobleIds = JSONArray.parseArray("[7,8]", Long.class);
+        for (Long offlineNobleId : offlineNobleIds) {
+            System.out.println(offlineNobleId);
+        }
+    }
+
+    private boolean checkInProtect(Date renewTime) throws BusinessException {
+        // 校验是否保护期内（包含未过期）
+        Integer protectDays = 10;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = null;
+        try {
+            date = simpleDateFormat.parse("2021-08-25 23:59:59");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        DateTime dateTime = new DateTime(date);
+        System.out.println(dateTime.minusDays(31));
+        DateTime time = dateTime.plusDays(1);
+        System.out.println(time.toDate().getTime());
+        return time.isAfter(DateTime.now());
+
+    }
+
+    class AExcepetion extends RuntimeException{
+        public AExcepetion(String message) {
+            super(message);
+        }
+    }
+
+    class BException extends RuntimeException{
+        public BException(String message) {
+            super(message);
+        }
+    }
+
+    class CException extends BException{
+
+        public CException(String message) {
+            super(message);
+        }
+    }
+
+    @Test
+    public void test1_25(){
+        try{
+            if(true){
+                throw new CException("c...");
+            }
+        }catch (BException e){
+            System.out.println("e...");
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Test
+    public void test1_26(){
+        Map<Long,String> map = new HashMap<>();
+        map.put(1L,"2");
+        map.put(1L,"3");
+        map.entrySet().forEach(v-> System.out.println(v.getValue()));
+    }
+
+    private static ThreadPoolExecutor executor =
+            new ThreadPoolExecutor(50, 500, 10L, TimeUnit.MINUTES, new LinkedBlockingQueue<Runnable>(5000), new ThreadPoolExecutor.DiscardOldestPolicy());
+
+    static {
+        StatLog.registerExecutor("dispatcher-fans-handle", executor);
+    }
+    @Test
+    public void test1_27(){
+        try{
+            List<String> a = Collections.EMPTY_LIST;
+            System.out.println(!a.contains("a"));
+            a.get(1);
+        }catch (Exception e){
+            System.out.println("logger error...");
+        }
+        List<UserDeviceInfo> validAndNotificationOnDevices = new ArrayList<>();
+        List<UserDeviceInfo> finalValidAndNotificationOnDevices = validAndNotificationOnDevices;
+        executor.execute(() -> {
+            System.out.println("error1///");
+            if (CollectionUtils.isNotEmpty(finalValidAndNotificationOnDevices)) {
+                System.out.println("error2///");
+            }
+        });
+        System.out.println("execute...");
+    }
+
+
+    @Test
+    public void  test1_28(){
+        Long a = null;
+        List<Long> batchFansUids = new ArrayList<>();
+        batchFansUids.add(a);
+        Long lastFollowerUid = batchFansUids.get(batchFansUids.size() - 1);
+        System.out.println(lastFollowerUid);
+//        batchFansUids = userRelationService.getFansFromDB4Push(pageParam, (lastFollowerUid + 1), higherFansUidExclusive);
+    }
+
+    @Test
+    public void test1_29(){
+        List<Long> batchFansUids = new ArrayList<>();
+//        batchFansUids.add(1L);
+        batchFansUids.add(2L);
+//        batchFansUids.add(3L);
+//        batchFansUids.add(4L);
+
+
+        if ( CollectionUtils.isNotEmpty(batchFansUids)) {
+//            List<Long> tempUids = batchFansUids;
+
+            List<Long> copy = new ArrayList<>(batchFansUids);
+            op(copy);
+            System.out.println(batchFansUids.size());
+            Long ba = batchFansUids.get(batchFansUids.size() - 1);
+            System.out.println(ba);
+        }
+    }
+    public void op(List<Long> ops){
+        ops.remove(2L);
+    }
+
+    private static final Logger logger = LoggerFactory.getLogger(SimpleTest1.class);
+
+    @Test
+    public void test1_30(){
+        String title = "【勉強٩(ˊᗜˋ*)و】テストや入試ファイトです(❁⃘p>ω<)尸\" ﾌﾚｰﾌﾚｰ☆".replace('\"','"');
+        System.out.println(title);
+        String s = JSON.toJSONString(title);
+        System.out.println(s);
+        JsonElement parse = new JsonParser().parse(s);
+        System.out.println(parse);
+
+    }
+
+
+
+
+    @Test
+    public void test1_40() {
+
+        for (int i = 0; i < 30; i++) {
+            int j = i + 1;
+            Node node = null;
+
+            try {
+                node = new Node();
+                node.setName("node " + i);
+                if (i == j) {
+
+                } else {
+                    Node node1 = node;
+                    executor.execute(() -> {
+                        printx(node1,j);
+                    });
+//                    Thread.sleep(20);
+                }
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
+    public void printx(Node node,int i){
+        System.out.println(node.getName() + ":" + i);
+    }
+
+
+    @Test
+    public void test1_41(){
+        JsonObject outerData = new JsonObject();
+        outerData.addProperty("type", PushType.CUSTOM_MESSAGE.getIndex());
+        outerData.addProperty("subType", PushCustomMessageType.ROOM_STAR.getIndex());
+        RoomInfo roomInfo = new RoomInfo();
+        roomInfo.setActualTime(1647502057322L);
+        roomInfo.setCommunicateNumber(0);
+        roomInfo.setUid(2044685045812L);
+        roomInfo.setTitle("〔〕Near的直播间");
+        String title = "〔〕Near的直播间";
+        String subTitle = "〔〕Near的直播间";
+        String headUrl = "xxxx";
+//        outerData.add("userInfo",JSON.toJSONString(userInfo));
+        String pushInfoJson = "{\"title\":\"" + title + "\",\"subTitle\":\"" + subTitle + "\",\"type\":0,\"headUrl\":\"" + headUrl + "\"}";
+        System.out.println(pushInfoJson);
+
+
+        outerData.add("pushInfo", new JsonParser().parse(pushInfoJson));
+        outerData.add("roomInfo",new JsonParser().parse(JSON.toJSONString(roomInfo)));
+        System.out.println(outerData.toString());
+
+
+        JSONObject outerData2 = new JSONObject();
+        outerData2.put("roomInfo", roomInfo);
+        outerData2.put("pushInfo", JSON.parse(pushInfoJson));
+        outerData2.put("type", PushType.CUSTOM_MESSAGE.getIndex());
+        outerData2.put("subType", PushCustomMessageType.ROOM_STAR.getIndex());
+
+        System.out.println(outerData2.toJSONString());
+
+
+    }
+
+    @Test
+    public void new_test(){
+        String key = "eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiY29tLnV4aW4ubGl2ZSIsImV4cCI6MTY1NTAyNTI3MywiaWF0IjoxNjU0OTM4ODczLCJzdWIiOiIwMDEzMzIuZThmMDk3ODdjZjllNDYzNDg1MDliNmZiODE1NTkxNWIuMDkxNCIsImNfaGFzaCI6Imwzc0QtNUZ1OEJLTFNUcUtfbkJ6ZFEiLCJlbWFpbCI6ImZrZnhjYnRobTRAcHJpdmF0ZXJlbGF5LmFwcGxlaWQuY29tIiwiZW1haWxfdmVyaWZpZWQiOiJ0cnVlIiwiaXNfcHJpdmF0ZV9lbWFpbCI6InRydWUiLCJhdXRoX3RpbWUiOjE2NTQ5Mzg4NzMsIm5vbmNlX3N1cHBvcnRlZCI6dHJ1ZSwicmVhbF91c2VyX3N0YXR1cyI6Mn0";
+        byte[] bytes = org.apache.commons.codec.binary.Base64.decodeBase64(key);
+        System.out.println(new String(bytes));
+
+        String key2 = "aqSwF7nu5Ed8lJ5ycUu9A1DHZqWXV8iu7_e2JUs1oVf1FPwea-y6qYLvPn_-Zc0ClKJ-h3CUZPWni3d_QBchKcO8YHJNuaiw24xVyCbHlB0L1HBk1qzSF3auzzkU7qHM3W6sr4rz4YKCTDWlVnwBUltog1nmspfghyCUstGN1Tt9dJXhS6fnLDm_-s9uypM6HVLejzBzfskdcOYFrm8d_ImHML9tsdn9i1nxnM8_MAMJnSjboLMQU5q-fiwXwbDQbZtG69dJVAmf6m2U-kAxlK1A43SJpgJ4ltlz9woQfdj_-QUeDLbOfTn03KsDf7od-JaXOwf7iIx4iAHrMo07bw";
+        byte[] bytes2 = org.apache.commons.codec.binary.Base64.decodeBase64(key2);
+        com.alibaba.fastjson.JSONObject body = com.alibaba.fastjson.JSONObject.parseObject(new String(bytes2));
+        String audience = (String) body.get("aud");
+        String subject = (String) body.get("sub");
+        System.out.println(audience + "---" + subject);
+    }
+
+    @Test
+    public void new_test2(){
+        String accessToken = "eyJraWQiOiJmaDZCczhDIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiY29tLnV4aW4ubGl2ZSIsImV4cCI6MTY1NTAyNTI3MywiaWF0IjoxNjU0OTM4ODczLCJzdWIiOiIwMDEzMzIuZThmMDk3ODdjZjllNDYzNDg1MDliNmZiODE1NTkxNWIuMDkxNCIsImNfaGFzaCI6Imwzc0QtNUZ1OEJLTFNUcUtfbkJ6ZFEiLCJlbWFpbCI6ImZrZnhjYnRobTRAcHJpdmF0ZXJlbGF5LmFwcGxlaWQuY29tIiwiZW1haWxfdmVyaWZpZWQiOiJ0cnVlIiwiaXNfcHJpdmF0ZV9lbWFpbCI6InRydWUiLCJhdXRoX3RpbWUiOjE2NTQ5Mzg4NzMsIm5vbmNlX3N1cHBvcnRlZCI6dHJ1ZSwicmVhbF91c2VyX3N0YXR1cyI6Mn0.aqSwF7nu5Ed8lJ5ycUu9A1DHZqWXV8iu7_e2JUs1oVf1FPwea-y6qYLvPn_-Zc0ClKJ-h3CUZPWni3d_QBchKcO8YHJNuaiw24xVyCbHlB0L1HBk1qzSF3auzzkU7qHM3W6sr4rz4YKCTDWlVnwBUltog1nmspfghyCUstGN1Tt9dJXhS6fnLDm_-s9uypM6HVLejzBzfskdcOYFrm8d_ImHML9tsdn9i1nxnM8_MAMJnSjboLMQU5q-fiwXwbDQbZtG69dJVAmf6m2U-kAxlK1A43SJpgJ4ltlz9woQfdj_-QUeDLbOfTn03KsDf7od-JaXOwf7iIx4iAHrMo07bw";
+
+        Map<String, String> paraMap = getParaMap(accessToken);
+        paraMap.entrySet().forEach(e -> System.out.println("key:"+e.getKey()+",value:"+e.getValue()));
+
+    }
+    public Map<String,String> getParaMap(String accessToken){
+        Map<String,String> result=new HashMap();
+        String[] jwt = accessToken.split("\\.");
+        byte[] header = org.apache.commons.codec.binary.Base64.decodeBase64(jwt[0].getBytes());
+        byte[] playBody = org.apache.commons.codec.binary.Base64.decodeBase64(jwt[1].getBytes());
+        com.alibaba.fastjson.JSONObject body = com.alibaba.fastjson.JSONObject.parseObject(new String(playBody));
+        String audience = (String) body.get("aud");
+        String subject = (String) body.get("sub");
+        com.alibaba.fastjson.JSONObject head = com.alibaba.fastjson.JSONObject.parseObject(new String(header));
+        System.out.println(head.toJSONString());
+        String kid = (String) head.get("kid");
+        result.put("audience",audience);
+        result.put("subject",subject);
+        result.put("kid",kid);
+        return result;
+
+    }
 
 }

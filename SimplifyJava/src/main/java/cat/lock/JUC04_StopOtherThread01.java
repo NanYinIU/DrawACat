@@ -54,4 +54,14 @@ public class JUC04_StopOtherThread01 {
             stopOtherThread01.increase();
         }).start();
     }
+
+    public String huiwen(String s, int left, int right) {
+        while (left > 0 && right < s.length()) {
+            if (s.charAt(left) == s.charAt(right)) {
+                left--;
+                right++;
+            }
+        }
+        return s.substring(left, right);
+    }
 }

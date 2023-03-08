@@ -68,7 +68,7 @@
         <dependency>
             <groupId>com.uxin.api.common</groupId>
             <artifactId>zb-api-model</artifactId>
-            <version>1.1.814-SNAPSHOT</version>
+            <version>1.1.907-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.uxin.commons</groupId>

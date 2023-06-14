@@ -36,6 +36,9 @@ import java.util.stream.Collectors;
 
 class TestApplicationTests {
 
+    /*
+    字段名	类型	说明
+     */
     private Object Map;
 
     @Test
@@ -560,19 +563,19 @@ class TestApplicationTests {
         }
         String goldActivityIcon = "{\"0\":{\"1\":\"https://img.hongrenshuo.com.cn/0_hublist_activity.png\",\"2\":\"\",\"3\":\"\"},\"12\":{\"19\":\"\",\"20\":\"\"},\"666\":\"\"}";
 
-        if (StringUtils.isNotBlank(goldActivityIcon)){
-            Map map = JSONObject.parseObject(goldActivityIcon, Map.class);
-            Object o = map.get(appId);
-            if (!ObjectUtils.isEmpty(o)){
-                Map res = JSONObject.parseObject(JSONObject.toJSONString(o), Map.class);
-                if (!CollectionUtils.isEmpty(res)){
-                    Object obj = res.get(clientType);
-                    if (!ObjectUtils.isEmpty(obj)){
-                        return (String) obj;
-                    }
-                }
-            }
-        }
+//        if (StringUtils.isNotBlank(goldActivityIcon)){
+//            Map map = JSONObject.parseObject(goldActivityIcon, Map.class);
+//            Object o = map.get(appId);
+//            if (!ObjectUtils.isEmpty(o)){
+//                Map res = JSONObject.parseObject(JSONObject.toJSONString(o), Map.class);
+//                if (!CollectionUtils.isEmpty(res)){
+//                    Object obj = res.get(clientType);
+//                    if (!ObjectUtils.isEmpty(obj)){
+//                        return (String) obj;
+//                    }
+//                }
+//            }
+//        }
         return "";
     }
 
@@ -732,7 +735,6 @@ class TestApplicationTests {
 
         System.out.println(date.getTime());
     }
-
 
 
 }

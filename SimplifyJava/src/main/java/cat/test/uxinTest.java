@@ -8,7 +8,13 @@ import com.uxin.commons.string.StringUtil;
 import com.uxin.commons.util.CollectionUtils;
 import com.uxin.commons.util.DateUtil;
 import com.uxin.zb.biz.commons.model.ThirdChannelType;
+import com.uxin.zb.fans.group.service.model.FansGroupBannerList;
+import com.uxin.zb.gacha.model.GachaItemType;
+import com.uxin.zb.gacha.model.UserBackpackInfo;
+import com.uxin.zb.gacha.model.UserBackpackItemStatus;
+import com.uxin.zb.room.service.model.QuestionInfo;
 import com.uxin.zb.user.service.enums.PushPlatform;
+import com.uxin.zb.user.service.model.UserInfo;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -17,21 +23,21 @@ import redis.clients.jedis.Tuple;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.junit.Test;
+import redis.clients.jedis.Tuple;
 
 /**
  * TODO
@@ -302,5 +308,272 @@ public class UxinTest {
         throw new NullPointerException();
     }
 
+  public String getFansGroupBannerList() {
+    return "{\"0\":[{\"id\":1,\"picUrl\":\"https://img.hongrenshuo.com.cn/shouhusuipian.png\",\"link\":\"http://playtest.uxin.com/GuardShard/index\"}],\"12\":[\n"
+        + "{\"id\":1,\"picUrl\":\"https://img.hongrenshuo.com.cn/shouhusuipian.png\",\"link\":\"https://live.hongdoulive.com/GuardShard/index\"}\n"
+        + "],\"666\":[]}";
+  }
+
+  @Test
+  public void test0_0_0() {
+    getFansGroupBannerListByAppId("0");
+  }
+
+  public List<FansGroupBannerList> getFansGroupBannerListByAppId(String appId) {
+    if (org.apache.commons.lang.StringUtils.isEmpty(appId)) {
+      return Collections.emptyList();
+    }
+    String fansGroupBannerList = getFansGroupBannerList();
+    if (org.apache.commons.lang.StringUtils.isEmpty(fansGroupBannerList)) {
+      return Collections.emptyList();
+    }
+    Map map = com.alibaba.fastjson.JSONObject.parseObject(fansGroupBannerList, Map.class);
+    Object o = map.get(appId);
+    if (o == null) {
+      return Collections.emptyList();
+    }
+    List<FansGroupBannerList> fansGroupBannerLists = com.alibaba.fastjson.JSONObject.parseArray(o.toString(),
+        FansGroupBannerList.class);
+    System.out.println(fansGroupBannerLists);
+    return fansGroupBannerLists;
+  }
+
+  @Test
+  public void tes_1_1() {
+    UserInfo userInfo = new UserInfo();
+    // userInfo.setId(1111L);
+    Long num = Optional.ofNullable(userInfo.getId()).orElse(0L);
+    System.out.println(num);
+  }
+
+  @Test
+  public void test_get_week() {
+    String weekString = buildWeekTimeByZoneWithOffset(ThirdChannelType.HONGDOU, -1);
+    System.out.println("***** get lastWeek is: " + weekString);
+  }
+
+  @Test
+  public void test_get_target_time_week() {
+    String weekString = buildWeekTimeByZoneWithTimeStamp(ThirdChannelType.HONGDOU, 1664720510000L);
+    System.out.println("***** get week is: " + weekString);
+  }
+
+  public static String buildWeekTimeByZoneWithOffset(ThirdChannelType thirdChannelType, Integer offset) {
+    DateTime now = DateTime.now().plusWeeks(offset);
+    if (thirdChannelType == ThirdChannelType.KLIVE) {
+      now = DateTime.now().plusWeeks(offset)
+          .toDateTime(DateTimeZone.forTimeZone(TimeZone.getTimeZone(ZoneId.SHORT_IDS.get("JST"))));
+    }
+    int year = now.getWeekyear();
+    int week = now.getWeekOfWeekyear();
+    return String.valueOf(year).concat(String.valueOf(week));
+  }
+
+  /**
+   * 根据时间戳获取周数
+   * @param thirdChannelType
+   * @param timeStamp
+   * @return
+   */
+  public static String buildWeekTimeByZoneWithTimeStamp(ThirdChannelType thirdChannelType, Long timeStamp) {
+    DateTime dt = new DateTime(timeStamp);
+    int year = dt.getWeekyear();
+    int week = dt.getWeekOfWeekyear();
+    return String.valueOf(year).concat(String.valueOf(week));
+  }
+
+  @Test
+  public void test_double_2_int() {
+
+    Double d = new Double(0.2);
+    System.out.println(d);
+    System.out.println(Math.round(d));
+    System.out.println(d.longValue());
+    System.out.println(d.intValue());
+  }
+
+  @Test
+  public void test_time_format() {
+    String formatDate = "2022010112";
+    DateTime dateTime = DateTimeFormat.forPattern("yyyyMMddHH")
+        .withZone(DateTimeZone.forTimeZone(TimeZone.getTimeZone(ZoneId.SHORT_IDS.get("JST"))))
+        .parseDateTime(formatDate);
+    System.out.println(dateTime);
+    System.out.println(dateTime.toString("yyyyMMddHH"));
+    // set dateTime to max in this day
+    dateTime = dateTime.millisOfDay()
+            .withMaximumValue();
+    // format formatDate to yyyyMMdd
+    formatDate = dateTime.toString("yyyyMMdd");
+
+  }
+
+  @Test
+  public void test_enum(){
+//    List<GachaItemType> defaultList = PeriodGachaItemType.getDefaultList();
+//    System.out.println(defaultList);
+//    String s = BanPanelOptionsEnum.FOREVER.toString();
+//    System.out.println(s);
+//    List<BanPanelOptionsEnum> from = BanPanelOptionsEnum.from(ThirdChannelType.KLIVE);
+//    System.out.println(JSON.toJSONString(from));
+    List<BanPanelOption> banPanelOptionsJsonFromSerializeMap = BanPanelOptionsEnum.getBanPanelOptionsJsonFromSerializeMap(ThirdChannelType.KLIVE);
+    System.out.println(JSON.toJSONString(banPanelOptionsJsonFromSerializeMap));
+//    List<BanPanelOption> banPanelOptionsJsonFromSerializeMap1 = BanPanelOptionsEnum.getBanPanelOptionsJsonFromSerializeMap(ThirdChannelType.KLIVE);
+//    System.out.println(JSON.toJSONString(banPanelOptionsJsonFromSerializeMap1));
+
+  }
+
+  @Test
+  public void test1_1_1(){
+    List<UserBackpackInfo> infos = new ArrayList<>();
+    // mock data
+    UserBackpackInfo info1 = new UserBackpackInfo();
+    info1.setId(1L);
+    info1.setCreateTime(new Date(1L));
+    info1.setNum(1);
+    info1.setExpireTime(new Date(3L));
+    info1.setStatus(UserBackpackItemStatus.ACTIVE);
+
+    UserBackpackInfo info2 = new UserBackpackInfo();
+    info2.setId(1L);
+    info2.setNum(2);
+    info2.setCreateTime(new Date(2L));
+    info2.setExpireTime(new Date(3L));
+    info2.setStatus(UserBackpackItemStatus.ACTIVE);
+
+    UserBackpackInfo info3 = new UserBackpackInfo();
+    info3.setId(3L);
+    info3.setNum(2);
+    info3.setCreateTime(new Date(3L));
+    info3.setExpireTime(new Date(2L));
+    info3.setStatus(UserBackpackItemStatus.ACTIVE);
+
+    UserBackpackInfo info4 = new UserBackpackInfo();
+    info4.setId(2L);
+    info4.setNum(2);
+    info4.setCreateTime(new Date(3L));
+    info4.setExpireTime(null);
+    info4.setStatus(UserBackpackItemStatus.ACTIVE);
+
+    UserBackpackInfo info5 = new UserBackpackInfo();
+    info5.setId(2L);
+    info5.setNum(1);
+    info5.setCreateTime(new Date(5L));
+    info5.setExpireTime(null);
+    info5.setStatus(UserBackpackItemStatus.ACTIVE);
+
+    infos.add(info1);
+    infos.add(info2);
+    infos.add(info3);
+    infos.add(info4);
+    infos.add(info5);
+
+    Map<Long, List<Integer>> collect = infos.stream().collect(Collectors.groupingBy(UserBackpackInfo::getId, Collectors.mapping(UserBackpackInfo::getNum, Collectors.toList())));
+    System.out.println(collect);
+  }
+  private List<UserBackpackInfo> sortByStatus(List<UserBackpackInfo> infos) {
+    List<UserBackpackInfo> data = new ArrayList<>();
+    data.addAll(infos.stream().filter(v -> UserBackpackItemStatus.ACTIVE.equals(v.getStatus())).sorted(userBackpackInfoComparator).collect(Collectors.toList()));
+    data.addAll(infos.stream().filter(v -> UserBackpackItemStatus.SUSPEND.equals(v.getStatus())).sorted(userBackpackInfoComparator).collect(Collectors.toList()));
+    data.addAll(infos.stream().filter(v -> UserBackpackItemStatus.NU_ACTIVE.equals(v.getStatus())).sorted(userBackpackInfoComparator).collect(Collectors.toList()));
+    data.addAll(infos.stream().filter(v -> UserBackpackItemStatus.SHELF.equals(v.getStatus())).sorted(userBackpackInfoComparator).collect(Collectors.toList()));
+    return data;
+  }
+
+
+
+  private final Comparator<UserBackpackInfo> userBackpackInfoComparator = (o1, o2) -> {
+    Date o1Time = o1.getExpireTime();
+    Date o2Time = o2.getExpireTime();
+    // if status is un active or shelf use create time to sort
+    if(UserBackpackItemStatus.NU_ACTIVE.equals(o1.getStatus())
+            || UserBackpackItemStatus.SHELF.equals(o1.getStatus())){
+      o1Time = o1.getCreateTime();
+      o2Time = o2.getCreateTime();
+    }
+    if (o1Time == null && o2Time == null) {
+      return 0;
+    }
+    if (o1Time == null) {
+      return -1;
+    }
+    if (o2Time == null) {
+      return 1;
+    }
+    if (o1Time.after(o2Time)) {
+      return 1;
+    }
+    if (o2Time.after(o1Time)) {
+      return -1;
+    }
+    return 0;
+  };
+
+  @Test
+  public void test_week_output(){
+    int offset = 0;
+    ThirdChannelType thirdChannelType = ThirdChannelType.HONGDOU;
+//    DateTimeZone.forTimeZone(TimeZoneUtil.getTimeZone(thirdChannelType))
+    DateTime now = DateTime.now().plusWeeks(offset).toDateTime();
+    DateTimeFormatter fmt = DateTimeFormat.forPattern("xww");
+    System.out.println(now.toString(fmt));
+  }
+
+  @Test
+  public void bitTest(){
+    long uuid_64bit_new = get_uuid_64bit_new(1L);
+  }
+
+  private static final int UUID_BUSINESS_NUM = 4;
+  private static long serverId = 0;
+  private static long haid = 0;
+  private static long[] seqidarray = new long[]{0L, 0L, 0L, 0L};
+  private static long[] seconds = new long[]{0L, 0L, 0L, 0L};
+
+  public long get_uuid_64bit_new(long id) {
+    long uuid = LocalDateTime.now().toEpochSecond(ZoneOffset.ofHours(+8));
+
+    id = (id < 0 || id > UUID_BUSINESS_NUM - 1) ? 0 : id;
+    if (seconds[(int) id] != uuid) {
+      seconds[(int) id] = uuid;
+      seqidarray[(int) id] = ThreadLocalRandom.current().nextInt() & ((1 << 5) - 1); //seqid start from a random number between 0 and 63
+    }
+
+    uuid -= 1262275200L;
+
+    uuid = uuid << 32;
+    uuid += serverId << 28;
+    uuid += id << 26;
+    ++seqidarray[(int) id];
+    seqidarray[(int) id] = seqidarray[(int) id] % (1 << 25);
+    uuid += seqidarray[(int) id] << 1; //seq num
+    uuid += haid; //ha id
+    return uuid;
+  }
+
+
+  @Test
+  public void test10_10(){
+    List<Long> l1 = new ArrayList<>();
+    List<Long> l2 =  Collections.emptyList();
+    List<Long> l3 =  Collections.emptyList();
+    l1.addAll(l2);
+    l2.addAll(l3);
+    l2.addAll(l1);
+  }
+
+
+  @Test
+  public void testLongFormat(){
+    String value = "1822336482019377272";
+    Set<String> newSet = new HashSet<>();
+    newSet.add("-1");
+    newSet.add(value);
+
+    List<Long> collect = newSet.stream().map(Long::valueOf).collect(Collectors.toList());
+    System.out.println(collect);
+
+
+  }
 
 }

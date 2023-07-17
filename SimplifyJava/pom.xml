@@ -13,8 +13,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>9</source>
+                    <target>9</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
@@ -85,7 +85,7 @@
         <dependency>
             <groupId>com.uxin.api.common</groupId>
             <artifactId>zb-api-model</artifactId>
-            <version>1.1.1019-SNAPSHOT</version>
+            <version>1.1.1021</version>
         </dependency>
         <dependency>
             <groupId>com.uxin.commons</groupId>
@@ -102,6 +102,44 @@
             <artifactId>jjwt-api</artifactId>
             <version>0.11.5</version>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.28</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.94.Final</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.atomikos/transactions-jta -->
+        <dependency>
+            <groupId>com.atomikos</groupId>
+            <artifactId>transactions-jta</artifactId>
+            <version>5.0.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mengyun</groupId>
+            <artifactId>tcc-transaction-api</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mengyun</groupId>
+            <artifactId>tcc-transaction-core</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mengyun</groupId>
+            <artifactId>tcc-transaction-spring</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
+
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>

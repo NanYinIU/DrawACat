@@ -6,9 +6,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+//import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import com.uxin.commons.api.BusinessException;
 import com.uxin.commons.crypto.AESUtil;
+import com.uxin.commons.crypto.Base64;
 import com.uxin.commons.json.JsonConverter;
 import com.uxin.commons.logutil.StatLog;
 import com.uxin.commons.util.CollectionUtils;
@@ -65,7 +66,7 @@ import org.openjdk.jol.info.ClassLayout;
 import org.openjdk.jol.vm.VM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.misc.GC;
+//import sun.misc.GC;
 
 /**
  * 简单测试

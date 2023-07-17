@@ -1,6 +1,5 @@
 package cat.jvm;
 
-import org.omg.CORBA.Current;
 import org.openjdk.jol.datamodel.CurrentDataModel;
 import org.openjdk.jol.info.ClassLayout;
 import org.openjdk.jol.layouters.CurrentLayouter;
